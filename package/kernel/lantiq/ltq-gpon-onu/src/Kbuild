@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+#
+# Kbuild for the Lantiq/Intel Falcon GPON ONU driver (mod_onu.ko),
+# ported to build against modern kernels (validated on 6.6).
+#
+# Source list mirrors libonu_sources from the original autotools build
+# (gpon_onu_drv 4.5.0, dual BSD/GPL).
+#
+# drv_onu_base.c        - ONU_LIBRARY-only (empty TU for kernel builds)
+# drv_onu_devio.c       - ONU_SIMULATION-only (empty TU)
+# drv_onu_simulator.c   - ONU_SIMULATION-only (empty TU)
+# drv_onu_cli*.c        - empty TUs unless INCLUDE_CLI(_DUMP)_SUPPORT
+# drv_onu_ll_tod_asc.c  - empty TU unless ONU_TOD_ASC1 (platform hook)
+
+obj-m := mod_onu.o
+
+mod_onu-y := drv_onu_base.o \
+	drv_onu_cli.o \
+	drv_onu_cli_core.o \
+	drv_onu_cli_dump.o \
+	drv_onu_cli_dump_misc.o \
+	drv_onu_cli_misc.o \
+	drv_onu_common.o \
+	drv_onu_devio.o \
+	drv_onu_gpe.o \
+	drv_onu_gpe_tables.o \
+	drv_onu_gtc.o \
+	drv_onu_lan.o \
+	drv_onu_linux.o \
+	drv_onu_ll_cop.o \
+	drv_onu_ll_eim.o \
+	drv_onu_ll_fsqm.o \
+	drv_onu_ll_gpearb.o \
+	drv_onu_ll_gtc.o \
+	drv_onu_ll_ictrlg.o \
+	drv_onu_ll_ictrll.o \
+	drv_onu_ll_iqm.o \
+	drv_onu_ll_octrlg.o \
+	drv_onu_ll_octrll.o \
+	drv_onu_ll_sce.o \
+	drv_onu_ll_ssb.o \
+	drv_onu_ll_sys.o \
+	drv_onu_ll_tbm.o \
+	drv_onu_ll_tmu.o \
+	drv_onu_ll_tod.o \
+	drv_onu_ll_tod_asc.o \
+	drv_onu_notifier.o \
+	drv_onu_ploam.o \
+	drv_onu_simulator.o \
+	drv_onu_tse_config.o \
+	drv_onu_tse.o
+
+ccflags-y += -DLINUX -DHAVE_CONFIG_H \
+	-I$(src) -I$(src)/include \
+	-I$(IFXOS_SRC)/src/include \
+	-I$(IFXOS_SRC)/src/include/linux \
+	-Wno-declaration-after-statement \
+	-Wno-undef
+# -Wno-undef: include/drv_onu_gpe_tables.h (frozen userspace ABI, kept
+# pristine) evaluates __BIG_ENDIAN before linux/byteorder.h defines it.

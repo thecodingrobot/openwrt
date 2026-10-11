@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Kbuild for the ONU LED trigger companion module (mod_onu_led_trigger.ko),
+# from gpon_onu_drv 4.5.0 led-trigger/, ported to modern kernels (6.6).
+# Depends on symbols exported by mod_onu.ko (onu_get_by_name, ...).
+#
+# NOTE: this module needs a target kernel built with
+#   CONFIG_NEW_LEDS=y, CONFIG_LEDS_CLASS=y, CONFIG_LEDS_TRIGGERS=y
+# The API-test tree (allnoconfig+NET+PROC_FS) has the LED subsystem
+# compiled out entirely, so CONFIG_LEDS_TRIGGERS is forced on for the
+# translation unit to compile against it; linking then requires an
+# LED-enabled kernel (modpost fails against the stripped test tree).
+# On a kernel with CONFIG_LEDS_TRIGGERS=y the extra define is a no-op.
+
+obj-m := mod_onu_led_trigger.o
+
+mod_onu_led_trigger-y := drv_onu_led_trigger.o
+
+ccflags-y += -DLINUX -DCONFIG_LEDS_TRIGGERS \
+	-I$(src) -I$(ONU_SRC) -I$(ONU_SRC)/include \
+	-Wno-declaration-after-statement

@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Kbuild for the ONU ethernet companion module (mod_onu_netdev.ko),
+# from gpon_onu_drv 4.5.0 netdev/, ported to modern kernels (6.6).
+# Depends on symbols exported by mod_onu.ko (net_pdu_write, ...).
+
+obj-m := mod_onu_netdev.o
+
+mod_onu_netdev-y := drv_onu_netdev.o
+
+ccflags-y += -DLINUX -DHAVE_CONFIG_H \
+	-I$(src) -I$(ONU_SRC) -I$(ONU_SRC)/include \
+	-Wno-declaration-after-statement

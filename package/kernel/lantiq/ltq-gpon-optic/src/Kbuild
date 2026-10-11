@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+#
+# Kbuild for the Lantiq/Intel Falcon GPON optic driver (mod_optic.ko),
+# ported to build against modern kernels (validated on 6.6).
+#
+# Source list mirrors liboptic_sources from the original autotools build
+# (gpon_optic_drv 4.5.0, dual BSD/GPL).
+#
+# drv_optic_base.c   - OPTIC_LIBRARY-only (empty TU for kernel builds)
+# drv_optic_devio.c  - OPTIC_SIMULATION-only (empty TU for kernel builds)
+# drv_optic_cli_*.c  - compile to empty TUs unless INCLUDE_CLI_SUPPORT
+
+obj-m := mod_optic.o
+
+mod_optic-y := drv_optic_common.o \
+	drv_optic_calc.o \
+	drv_optic_goi.o \
+	drv_optic_fcsi.o \
+	drv_optic_mm.o \
+	drv_optic_mpd.o \
+	drv_optic_bert.o \
+	drv_optic_tx.o \
+	drv_optic_rx.o \
+	drv_optic_omu.o \
+	drv_optic_bosa.o \
+	drv_optic_cal.o \
+	drv_optic_dcdc_apd.o \
+	drv_optic_dcdc_core.o \
+	drv_optic_dcdc_ddr.o \
+	drv_optic_ldo.o \
+	drv_optic_ll_fcsi.o \
+	drv_optic_ll_status.o \
+	drv_optic_ll_sys_gpon.o \
+	drv_optic_ll_octrlg.o \
+	drv_optic_ll_gpio.o \
+	drv_optic_ll_pll.o \
+	drv_optic_ll_rx.o \
+	drv_optic_ll_tx.o \
+	drv_optic_ll_mm.o \
+	drv_optic_ll_mpd.o \
+	drv_optic_ll_bert.o \
+	drv_optic_ll_gtc.o \
+	drv_optic_ll_dcdc_apd.o \
+	drv_optic_ll_dcdc_core.o \
+	drv_optic_ll_dcdc_ddr.o \
+	drv_optic_ll_sys1.o \
+	drv_optic_ll_int.o \
+	drv_optic_ll_simulator.o \
+	drv_optic_linux.o \
+	drv_optic_devio.o \
+	drv_optic_base.o \
+	drv_optic_cli.o \
+	drv_optic_cli_misc.o \
+	drv_optic_cli_core.o
+
+ccflags-y += -DLINUX -DHAVE_CONFIG_H \
+	-I$(src) -I$(src)/include \
+	-I$(IFXOS_SRC)/src/include \
+	-I$(IFXOS_SRC)/src/include/linux \
+	-Wno-declaration-after-statement
