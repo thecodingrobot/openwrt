@@ -57,4 +57,4 @@ ccflags-y += -DLINUX -DHAVE_CONFIG_H \
 	-I$(src) -I$(src)/include \
 	-I$(IFXOS_SRC)/src/include \
 	-I$(IFXOS_SRC)/src/include/linux \
-	-Wno-declaration-after-statement
+	-Wno-declaration-after-statement -Wno-missing-prototypes -Wno-missing-declarations -Wno-enum-conversion -Wno-enum-int-mismatch -Wno-unused-result -Wno-cpp

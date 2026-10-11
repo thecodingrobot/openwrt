@@ -513,6 +513,7 @@ static bool optic_calc_fixsetting_need ( struct optic_control *p_ctrl,
 			    == OPTIC_TABLEQUAL_INITIAL)
 				return true;
 		}
+		fallthrough;
 	default:
 		return false;
 	}

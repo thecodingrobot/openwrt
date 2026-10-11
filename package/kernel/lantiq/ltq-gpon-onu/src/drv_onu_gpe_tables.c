@@ -4476,7 +4476,7 @@ gpe_acl_table_entry_delete(struct onu_device *p_dev,
 #if defined(INCLUDE_DUMP)
 
 #ifdef LINUX
-#include <asm/unaligned.h>
+#include <linux/unaligned.h>
 #endif
 
 static const char *type[] = {

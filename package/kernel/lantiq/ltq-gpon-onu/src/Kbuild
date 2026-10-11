@@ -54,7 +54,7 @@ ccflags-y += -DLINUX -DHAVE_CONFIG_H \
 	-I$(src) -I$(src)/include \
 	-I$(IFXOS_SRC)/src/include \
 	-I$(IFXOS_SRC)/src/include/linux \
-	-Wno-declaration-after-statement \
+	-Wno-declaration-after-statement -Wno-missing-prototypes -Wno-missing-declarations -Wno-enum-conversion -Wno-enum-int-mismatch -Wno-unused-result -Wno-unused-variable -Wno-frame-larger-than -Wno-cast-function-type -Wno-uninitialized -Wno-maybe-uninitialized -Wno-address -Wno-implicit-fallthrough -Wno-array-parameter -Wno-stringop-overread -Wno-stringop-overflow -Wno-unused-but-set-variable -Wno-cpp \
 	-Wno-undef
 # -Wno-undef: include/drv_onu_gpe_tables.h (frozen userspace ABI, kept
 # pristine) evaluates __BIG_ENDIAN before linux/byteorder.h defines it.

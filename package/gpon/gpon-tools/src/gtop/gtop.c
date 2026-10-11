@@ -9,6 +9,8 @@
 ******************************************************************************/
 
 #include <stdlib.h>
+#include <sys/select.h>
+#include <sys/time.h>
 #include <string.h>
 #include <stdarg.h>
 

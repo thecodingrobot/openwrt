@@ -99,6 +99,13 @@
 #ifndef KSEG1
 #  define KSEG1 0xA0000000UL
 #endif
+
+/* del_timer() was renamed timer_delete() in Linux 6.15 */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,15,0)
+#  define optic_del_timer(t)   timer_delete(t)
+#else
+#  define optic_del_timer(t)   del_timer(t)
+#endif
 #include <linux/leds.h>
 #include <linux/sched.h>
 #include <linux/timer.h>
@@ -1784,7 +1791,7 @@ void optic_timer_start(const uint32_t timer_no, uint32_t timeout)
 void optic_timer_stop(const uint32_t timer_no)
 {
 	/*printk("stop timer %d" OPTIC_CRLF, timer_no); */
-	del_timer(&optic_timer[timer_no]);
+	optic_del_timer(&optic_timer[timer_no]);
 }
 
 int32_t optic_spinlock_init ( optic_lock *id, const char *name )
@@ -2196,7 +2203,7 @@ void __exit optic_exit ( void )
 	class_destroy (optic_class);
 
 	for (i = 0; i < OPTIC_TIMER_GLOBAL_MAX; i++) {
-		del_timer (&optic_timer[i]);
+		optic_del_timer (&optic_timer[i]);
 	}
 
 #ifdef INCLUDE_CLI_SUPPORT

@@ -18,4 +18,4 @@ mod_onu_led_trigger-y := drv_onu_led_trigger.o
 
 ccflags-y += -DLINUX -DCONFIG_LEDS_TRIGGERS \
 	-I$(src) -I$(ONU_SRC) -I$(ONU_SRC)/include \
-	-Wno-declaration-after-statement
+	-Wno-declaration-after-statement -Wno-missing-prototypes -Wno-missing-declarations -Wno-enum-conversion -Wno-enum-int-mismatch -Wno-unused-result -Wno-unused-variable -Wno-frame-larger-than -Wno-cast-function-type -Wno-uninitialized -Wno-maybe-uninitialized -Wno-address -Wno-implicit-fallthrough -Wno-array-parameter -Wno-stringop-overread -Wno-stringop-overflow -Wno-unused-but-set-variable -Wno-cpp

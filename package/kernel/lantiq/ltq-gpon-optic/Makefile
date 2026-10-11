@@ -17,6 +17,8 @@ PKG_LICENSE_FILES:=src/LICENSE
 # (dual BSD/GPL, mirrored at gitea.osmocom.org/gpon) with a port to modern
 # kernels - see PORTING notes in the source tree.
 
+PKG_EXTMOD_SUBDIRS:=src
+
 include $(INCLUDE_DIR)/package.mk
 
 IFXOS_DIR:=$(KERNEL_BUILD_DIR)/ifxos-ugw_8.5.2.10
@@ -25,7 +27,7 @@ define KernelPackage/ltq-gpon-optic
   SUBMENU:=$(NETWORK_DEVICES_MENU)
   TITLE:=Lantiq Falcon GPON optic (BOSA) driver
   DEPENDS:=@TARGET_lantiq_falcon +kmod-ltq-ifxos
-  FILES:=$(PKG_BUILD_DIR)/mod_optic.ko
+  FILES:=$(PKG_BUILD_DIR)/src/mod_optic.ko
   AUTOLOAD:=$(call AutoLoad,25,mod_optic)
 endef
 
@@ -49,6 +51,7 @@ define Build/Compile
 		IFXOS_SRC="$(IFXOS_DIR)" \
 		KBUILD_EXTRA_SYMBOLS="$(IFXOS_DIR)/src/Module.symvers" \
 		modules
+	cp -f $(PKG_BUILD_DIR)/src/Module.symvers $(PKG_BUILD_DIR)/Module.symvers
 endef
 
 $(eval $(call KernelPackage,ltq-gpon-optic))

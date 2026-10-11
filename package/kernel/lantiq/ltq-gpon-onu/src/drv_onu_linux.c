@@ -137,7 +137,7 @@
 #  ifdef CONFIG_SOC_FALCON
 #     include <falcon/falcon_irq.h>
 #  endif
-#elif defined(CONFIG_LANTIQ)
+#elif defined(CONFIG_LANTIQ) && (LINUX_VERSION_CODE < KERNEL_VERSION(4,10,0))
 #  include <lantiq.h>
 #  include <falcon_irq.h>
 #else
@@ -181,6 +181,13 @@
 #ifndef FALCON_IRQ_LINK1
 #	define FALCON_IRQ_LINK1		(INT_NUM_IM2_IRL0 + 14)
 #endif
+#endif
+
+/* del_timer() was renamed timer_delete() in Linux 6.15 */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,15,0)
+#  define onu_del_timer(t)   timer_delete(t)
+#else
+#  define onu_del_timer(t)   del_timer(t)
 #endif
 
 #include "ifxos_device_io.h"
@@ -1461,7 +1468,7 @@ void onu_timer_start(const uint32_t timer_no, uint32_t timeout)
 void onu_timer_stop(const uint32_t timer_no)
 {
 	/*printk("stop timer %d" ONU_CRLF, timer_no); */
-	del_timer(&onu_timer[timer_no]);
+	onu_del_timer(&onu_timer[timer_no]);
 }
 
 /*
@@ -1659,7 +1666,7 @@ int onu_pe_fw_info_load(const struct onu_fw *pe_fw, struct pe_fw_info *info)
 	if (info->opt_hdr)
 		return -1;
 
-	strncpy(info->fw_name, pe_fw->fw_name, ONU_PE_FIRMWARE_NAME_MAX);
+	strscpy(info->fw_name, pe_fw->fw_name, sizeof(info->fw_name));
 
 	info->flags[0] = ((uint32_t*)pe_fw->bin)[PE_FW_FLAG0_OFFSET_WORD];
 	info->flags[1] = ((uint32_t*)pe_fw->bin)[PE_FW_FLAG1_OFFSET_WORD];
@@ -1667,7 +1674,10 @@ int onu_pe_fw_info_load(const struct onu_fw *pe_fw, struct pe_fw_info *info)
 	opt_hdr_len = info->flags[0] & PE_FW_FLAG0_OPT_HEADER_MASK ?
 		   ((uint32_t*)pe_fw->bin)[PE_FW_OPT_HDR_LEN_OFFSET_WORD] : 0;
 
-	memcpy(&info->ver.major, pe_fw->bin, 4);
+	info->ver.major = pe_fw->bin[0];
+	info->ver.minor = pe_fw->bin[1];
+	info->ver.patch = pe_fw->bin[2];
+	info->ver.internal = pe_fw->bin[3];
 
 	if (!opt_hdr_len)
 		return 0;
@@ -2171,7 +2181,7 @@ void __exit onu_exit(void)
 	class_destroy(gpon_class);
 
 	for (i = 0; i < ONU_MAX_TIMER; i++)
-		del_timer(&onu_timer[i]);
+		onu_del_timer(&onu_timer[i]);
 
 #ifdef INCLUDE_CLI_SUPPORT
 	onu_cli_shutdown();

@@ -34,7 +34,21 @@
 #include <linux/ctype.h>
 #include <linux/if.h>
 #include <linux/leds.h>
+#include <linux/timer.h>
 #include <net/net_namespace.h>
+
+/* from_timer() was renamed timer_container_of() in Linux 6.18 */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,18,0)
+#  define onu_from_timer(var, t, field) timer_container_of(var, t, field)
+#else
+#  define onu_from_timer(var, t, field) from_timer(var, t, field)
+#endif
+/* del_timer_sync() was renamed timer_delete_sync() in Linux 6.15 */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,15,0)
+#  define onu_del_timer_sync(t) timer_delete_sync(t)
+#else
+#  define onu_del_timer_sync(t) del_timer_sync(t)
+#endif
 
 #include "drv_onu_notifier.h"
 #include "drv_onu_led_trigger.h"
@@ -278,7 +292,7 @@ static DEVICE_ATTR(interval, 0644, led_interval_show, led_interval_store);
 static void onudev_trig_timer(struct timer_list *t)
 {
 	struct led_onu_data *trigger_data =
-		from_timer(trigger_data, t, timer);
+		onu_from_timer(trigger_data, t, timer);
 	const struct onu_notifier_device_stats *dev_stats;
 	unsigned new_activity;
 
@@ -417,7 +431,7 @@ static void onudev_trig_deactivate(struct led_classdev *led_cdev)
 
 		write_unlock(&trigger_data->lock);
 
-		del_timer_sync(&trigger_data->timer);
+		onu_del_timer_sync(&trigger_data->timer);
 
 		kfree(trigger_data);
 	}

@@ -534,12 +534,21 @@ err:
 	return err;
 }
 
+/* platform_driver .remove became void in modern kernels */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,11,0)
+STATIC void onu_netdev_remove(struct platform_device *dev)
+{
+	SW_DBG("remove %s\n", dev->name);
+	onu_netdev_cleanup();
+}
+#else
 STATIC int onu_netdev_remove(struct platform_device *dev)
 {
 	SW_DBG("remove %s\n", dev->name);
 	onu_netdev_cleanup();
 	return 0;
 }
+#endif
 
 static struct platform_driver onu_netdev_driver = {
 	.probe = onu_netdev_probe,

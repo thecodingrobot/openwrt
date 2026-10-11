@@ -6,6 +6,8 @@
 #ifndef INCLUDE_CLI_SUPPORT
 #include <stdarg.h>
 #include <stdlib.h>
+#include <sys/select.h>
+#include <sys/time.h>
 #endif
 
 #ifdef ONU_SCE_TABLES_WRAPPERS

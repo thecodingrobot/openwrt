@@ -17,6 +17,8 @@ PKG_LICENSE_FILES:=src/LICENSE
 # (dual BSD/GPL, mirrored at gitea.osmocom.org/gpon) with a port to modern
 # kernels - mod_onu.ko plus the netdev and led-trigger companion modules.
 
+PKG_EXTMOD_SUBDIRS:=src netdev led-trigger
+
 include $(INCLUDE_DIR)/package.mk
 
 IFXOS_DIR:=$(KERNEL_BUILD_DIR)/ifxos-ugw_8.5.2.10
@@ -52,21 +54,21 @@ define Build/Compile
 		$(KERNEL_MAKE_FLAGS) \
 		M="$(PKG_BUILD_DIR)/src" \
 		IFXOS_SRC="$(IFXOS_DIR)" \
-		KBUILD_EXTRA_SYMBOLS="$(IFXOS_DIR)/src/Module.symvers" \
+		KBUILD_EXTRA_SYMBOLS="$(wildcard $(KERNEL_BUILD_DIR)/symvers/*.symvers)" \
 		modules
 	$(MAKE) -C "$(LINUX_DIR)" \
 		$(KERNEL_MAKE_FLAGS) \
 		M="$(PKG_BUILD_DIR)/netdev" \
 		IFXOS_SRC="$(IFXOS_DIR)" \
 		ONU_SRC="$(PKG_BUILD_DIR)/src" \
-		KBUILD_EXTRA_SYMBOLS="$(IFXOS_DIR)/src/Module.symvers $(PKG_BUILD_DIR)/src/Module.symvers" \
+		KBUILD_EXTRA_SYMBOLS="$(wildcard $(KERNEL_BUILD_DIR)/symvers/*.symvers) $(PKG_BUILD_DIR)/src/Module.symvers" \
 		modules
 	$(MAKE) -C "$(LINUX_DIR)" \
 		$(KERNEL_MAKE_FLAGS) \
 		M="$(PKG_BUILD_DIR)/led-trigger" \
 		IFXOS_SRC="$(IFXOS_DIR)" \
 		ONU_SRC="$(PKG_BUILD_DIR)/src" \
-		KBUILD_EXTRA_SYMBOLS="$(IFXOS_DIR)/src/Module.symvers $(PKG_BUILD_DIR)/src/Module.symvers" \
+		KBUILD_EXTRA_SYMBOLS="$(wildcard $(KERNEL_BUILD_DIR)/symvers/*.symvers) $(PKG_BUILD_DIR)/src/Module.symvers" \
 		modules
 endef
 
