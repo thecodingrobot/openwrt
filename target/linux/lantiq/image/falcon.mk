@@ -99,7 +99,7 @@ define Device/sourcephotonics_sps-34-24t-hpdfo
   DEVICE_MODEL := SPS-34-24T-HP-TDFO
   DEVICE_ALT0_VENDOR := FS.com
   DEVICE_ALT0_MODEL := GPON-ONU-34-20BI (GPON-SFP-ONT-MAC-I)
-  DEVICE_DTS := falcon-sfp
+  DEVICE_DTS := falcon_lantiq_falcon-sfp
   IMAGE_SIZE := 7424k
   DEVICE_PACKAGES := kmod-ltq-gpon-onu kmod-ltq-gpon-optic gpon-tools
 endef
@@ -108,7 +108,7 @@ TARGET_DEVICES += sourcephotonics_sps-34-24t-hpdfo
 define Device/huawei_ma5671a
   DEVICE_VENDOR := Huawei
   DEVICE_MODEL := MA5671A
-  DEVICE_DTS := falcon-sfp
+  DEVICE_DTS := falcon_lantiq_falcon-sfp
   IMAGE_SIZE := 7424k
   DEVICE_PACKAGES := kmod-ltq-gpon-onu kmod-ltq-gpon-optic gpon-tools
 endef
@@ -117,7 +117,7 @@ TARGET_DEVICES += huawei_ma5671a
 define Device/nokia_g-010s-p
   DEVICE_VENDOR := Nokia
   DEVICE_MODEL := G-010S-P
-  DEVICE_DTS := falcon-sfp
+  DEVICE_DTS := falcon_lantiq_falcon-sfp
   IMAGE_SIZE := 7424k
   DEVICE_PACKAGES := kmod-ltq-gpon-onu kmod-ltq-gpon-optic gpon-tools
 endef
